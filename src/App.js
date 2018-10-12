@@ -8,7 +8,8 @@ class App extends Component {
     const tex = "ax^2 + bx + c = 0"
     this.state = {
       input: tex, 
-      output: tex
+      output: tex, 
+      answer: this.ansify(tex)
     }
   }
 
@@ -33,11 +34,17 @@ class App extends Component {
     return result
   }
 
+  ansify = (text) => {
+    let result = text.replace(/[0-9a-w]+/g, "\\boxed{\\phantom{0}}");
+    return result;
+  }
+
   click = (e) => {
     const tex = "ax^2 + bx = 0"
     this.setState({
       input: tex, 
-      output: tex
+      output: tex, 
+      answer: this.ansify(tex) 
     });
   }
 
@@ -46,7 +53,8 @@ class App extends Component {
     const result = this.parse(input);
     this.setState({
       input: input, 
-      output: result
+      output: result, 
+      answer: this.ansify(result)
     });
   }
 
@@ -55,6 +63,7 @@ class App extends Component {
       <div className="App">
         <MathJax.Provider>
           <div>
+            <MathJax.Node id="text" formula={this.state.answer} />
             <MathJax.Node id="text" formula={this.state.output} />
             <input type="text" value={this.state.input} onChange={this.change} />
             <button onClick={this.click}>change</button>
