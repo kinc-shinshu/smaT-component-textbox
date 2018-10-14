@@ -28,7 +28,6 @@ class App extends Component {
       for (let f of fs){
         console.log(f);
         let k = f.match(/[^%]+/g);
-        console.log(k);
         result = result.replace(f, "\\frac{" + k[0].slice(1, -1) + "}{" + k[1].slice(1, -1) + "}");
       }
     }
@@ -66,6 +65,10 @@ class App extends Component {
     this.add("[?]%[?]");
   }
 
+  index = () => {
+    this.add("?^{?}");
+  }
+
   change = (e) => {
     const input = e.target.value;
     const result = this.parse(input);
@@ -87,12 +90,15 @@ class App extends Component {
             <div style={{background: "#ccc", padding: 3, margin: 3}}>
               <MathJax.Node id="text" formula={this.state.output} />
             </div>
-            <input id="input" type="text" value={this.state.input} onChange={this.change} />
+            <input id="input" type="text" value={this.state.input} onChange={this.change} style={{height: "1em", fontSize: "3em"}} />
             <button onClick={this.sqrt}>
               <MathJax.Node formula="\sqrt{\boxed{\phantom{0}}}" />
             </button>
             <button onClick={this.frac}>
               <MathJax.Node formula="\frac{\boxed{\phantom{0}}}{\boxed{\phantom{0}}}" />
+            </button>
+            <button onClick={this.index}>
+              <MathJax.Node formula="\boxed{\phantom{0}}^{\boxed{\phantom{0}}}" />
             </button>
           </div>
         </MathJax.Provider>
