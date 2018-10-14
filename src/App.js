@@ -56,11 +56,11 @@ class App extends Component {
   }
 
   sqrt = () => {
-    this.add("#{2}");
+    this.add("#{?}");
   }
 
   frac = () => {
-    this.add("{2}%{2}")
+    this.add("{?}%{?}")
   }
 
   change = (e) => {
@@ -85,8 +85,12 @@ class App extends Component {
               <MathJax.Node id="text" formula={this.state.output} />
             </div>
             <input id="input" type="text" value={this.state.input} onChange={this.change} />
-            <button onClick={this.sqrt}>sqrt</button>
-            <button onClick={this.frac}>frac</button>
+            <button onClick={this.sqrt}>
+              <MathJax.Node formula="\sqrt{\boxed{\phantom{0}}}" />
+            </button>
+            <button onClick={this.frac}>
+              <MathJax.Node formula="\frac{\boxed{\phantom{0}}}{\boxed{\phantom{0}}}" />
+            </button>
           </div>
         </MathJax.Provider>
       </div>
