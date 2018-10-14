@@ -16,11 +16,11 @@ class App extends Component {
   parse = (text) => {
     let result = text.replace(/\*/g, "\\times");
     result = result.replace(/\//g, "\\div");
-    const fs = result.match(/[^ ]+%[^ ]+/g);
+    const fs = result.match(/{[^ ]+}%{[^ ]+}/g);
     if (fs != null){
       for (let f of fs){
         let k = f.match(/[^%]+/g);
-        result = result.replace(f, "\\frac{" + k[0] + "}{" + k[1] + "}");
+        result = result.replace(f, " \\frac{" + k[0].slice(1) + k[1].slice(0, -1) + "}");
       }
     }
     const ss = result.match(/#[^ ]+/g);
@@ -39,13 +39,28 @@ class App extends Component {
     return result;
   }
 
-  click = (e) => {
-    const tex = "ax^2 + bx = 0"
+  add = (text) => {
+    const input = document.querySelector("#input");
+    const cursor = input.selectionStart;
+    const before = this.state.input.slice(0, cursor);
+    const after = this.state.input.slice(cursor);
+    const changed_text = before + text + after;
     this.setState({
-      input: tex, 
-      output: tex, 
-      answer: this.ansify(tex) 
+      input: changed_text, 
+      output: this.parse(changed_text), 
+      answer: this.parse(this.ansify(changed_text))
+    }, () => {
+      input.focus();
+      input.setSelectionRange(cursor, cursor + text.length);
     });
+  }
+
+  sqrt = () => {
+    this.add("#{2}");
+  }
+
+  frac = () => {
+    this.add("{2}%{2}")
   }
 
   change = (e) => {
@@ -54,7 +69,7 @@ class App extends Component {
     this.setState({
       input: input, 
       output: result, 
-      answer: this.ansify(result)
+      answer: this.parse(this.ansify(input))
     });
   }
 
@@ -63,10 +78,15 @@ class App extends Component {
       <div className="App">
         <MathJax.Provider>
           <div>
-            <MathJax.Node id="text" formula={this.state.answer} />
-            <MathJax.Node id="text" formula={this.state.output} />
-            <input type="text" value={this.state.input} onChange={this.change} />
-            <button onClick={this.click}>change</button>
+            <div style={{background: "#ccc", padding: 3, margin: 3}}>
+              <MathJax.Node id="text" formula={this.state.answer} />
+            </div>
+            <div style={{background: "#ccc", padding: 3, margin: 3}}>
+              <MathJax.Node id="text" formula={this.state.output} />
+            </div>
+            <input id="input" type="text" value={this.state.input} onChange={this.change} />
+            <button onClick={this.sqrt}>sqrt</button>
+            <button onClick={this.frac}>frac</button>
           </div>
         </MathJax.Provider>
       </div>
