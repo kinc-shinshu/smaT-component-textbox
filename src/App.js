@@ -51,8 +51,7 @@ class App extends Component {
     const changed_text = before + text + after;
     this.setState({
       input: changed_text, 
-      output: this.parse(changed_text), 
-      answer: this.parse(this.ansify(changed_text))
+      output: this.parse(changed_text)
     }, () => {
       input.focus();
       input.setSelectionRange(cursor, cursor + text.length);
@@ -76,8 +75,15 @@ class App extends Component {
     const result = this.parse(input);
     this.setState({
       input: input, 
-      output: result, 
-      answer: this.parse(this.ansify(input))
+      output: result
+    });
+  }
+
+  click = () => {
+    const result = this.state.output;
+    const answer = this.ansify(result);
+    this.setState({
+      answer: answer
     });
   }
 
@@ -102,6 +108,7 @@ class App extends Component {
             <button onClick={this.index}>
               <MathJax.Node formula="\boxed{\phantom{0}}^{\boxed{\phantom{0}}}" />
             </button>
+            <button onClick={this.click}>Render</button>
           </div>
         </MathJax.Provider>
       </div>
