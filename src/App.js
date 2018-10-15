@@ -16,6 +16,8 @@ class App extends Component {
   parse = (text) => {
     let result = text.replace(/\*/g, "\\times");
     result = result.replace(/\//g, "\\div");
+    result = result.replace(/\+-/g, "\\pm");
+    result = result.replace(/-\+/g, "\\mp");
     const ss = result.match(/#{.+?}/g);
     if (ss != null){
       for (let s of ss){
